@@ -12,6 +12,8 @@ However, in a **production streaming environment**:
 
 - **Interval Tree**: Requires only $O(\log N)$ to maintain a consistent merged state.
 
+![Diagram of Pruning Logic](static/pruning-diagram.png)
+
 ### 🛠 Key Optimizations
 
 - **Attribute Flattening**: By moving from `self.interval = [lo, hi]` to `self.lo` and `self.hi`, we reduced Python's object lookup overhead by 15%.
