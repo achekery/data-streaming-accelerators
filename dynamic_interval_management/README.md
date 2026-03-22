@@ -18,6 +18,15 @@ The advantage of an Augmented AVL Interval Tree is its ability to prune search b
 
 ![Diagram of Pruning Logic](static/pruning-diagram.png)
 
+### 🛠 Getting Started
+
+This design requires **Python 3.11+**.
+
+To run the regression tests for this design:
+```bash
+cd dev && python solution.py
+```
+
 ## 2. Design Approaches
 
 ### Optimal Approaches for Batch Data (Static Intervals)
