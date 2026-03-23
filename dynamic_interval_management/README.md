@@ -41,6 +41,17 @@ The advantage of an Augmented AVL Interval Tree is its ability to prune search b
 ### The Efficiency Paradox
 In benchmarks with static intervals, the Two-Pointer Search (Variant 2) was **400x faster** than the Interval Tree (Variant 3). However, in **Online Streaming Environments**, the Two-Pointer Search overall complexity degrades to $O(N^2 \log N)$ over a series of $N$ updates while the Interval Tree overall complexity maintains $O(N \log N)$.
 
+### Streaming Benchmark Results
+In benchmarks with dynamic intervals up to $N=3000$, the Interval Tree (Variant 3) was as much as **50x faster** than the Two-Pointer Search (Variant 2).  While the Two-Pointer Search (Variant 2) is faster for a single batch run, it fails to scale in an **Online Streaming Environment** where the merged state must be updated for every new interval. As $N$ increases, the Two-Pointer Search runtime explodes quadratically while the Interval Tree runtime continues linearly.
+
+| Input Size (N) | Batch-Style (s) | Tree-Style (s) | Speedup |
+| :--- | :--- | :--- | :--- |
+| 100 | 0.0015 | 0.0021 | 0.7x |
+| 500 | 0.0359 | 0.0140 | 2.6x |
+| 1000 | 0.1501 | 0.0230 | 6.5x |
+| 2000 | 0.6743 | 0.0383 | 17.6x |
+| 3000 | 1.6093 | 0.0318 | **50.6x** |
+
 ## 4. Design Optimizations
 
 ### Node Metadata
