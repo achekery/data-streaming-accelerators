@@ -438,13 +438,13 @@ def benchmark_streaming():
         
         print(f"n={n} | Batch-Style: {t2:.4f}s | Tree-Style: {t3:.4f}s")
 
-        print("| Input Size (N) | Batch-Style (s) | Tree-Style (s) | Speedup |")
-        print("| :--- | :--- | :--- | :--- |")
-        for i, n in enumerate(sizes):
-            speedup = results_v2[i] / results_v3[i]
-            print(f"| {n} | {results_v2[i]:.4f} | {results_v3[i]:.4f} | {speedup:.1f}x |")
+    print("| Input Size (N) | Batch-Style (s) | Tree-Style (s) | Speedup |")
+    print("| :--- | :--- | :--- | :--- |")
+    for i, n in enumerate(sizes):
+        speedup = results_v2[i] / results_v3[i]
+        print(f"| {n} | {results_v2[i]:.4f} | {results_v3[i]:.4f} | {speedup:.1f}x |")
 
-        write_to_summary(sizes, results_v2, results_v3)
+    write_to_summary(sizes, results_v2, results_v3)
 
     # Generate Graph
     plt.figure(figsize=(10, 6))
