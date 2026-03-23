@@ -361,6 +361,18 @@ class Solution1:
                 count_intervals += 1
         return merged_intervals[:count_intervals]
 
+import os
+
+def write_to_summary(sizes, results_v2, results_v3):
+    summary_file = os.getenv('GITHUB_STEP_SUMMARY')
+    if summary_file:
+        with open(summary_file, 'a') as f:
+            f.write("### 🚀 Streaming Benchmark Results\n")
+            f.write("| N | Batch (Two-Pointer) | Tree (AVL) | Speedup |\n")
+            f.write("|---|---|---|---|\n")
+            for i, n in enumerate(sizes):
+                speedup = results_v2[i] / results_v3[i]
+                f.write(f"| {n} | {results_v2[i]:.4f}s | {results_v3[i]:.4f}s | **{speedup:.1f}x** |\n")
 
 import json
 import sys
@@ -420,6 +432,14 @@ def benchmark_streaming():
         results_v3.append(t3)
         
         print(f"n={n} | Batch-Style: {t2:.4f}s | Tree-Style: {t3:.4f}s")
+
+        print("| Input Size (N) | Batch-Style (s) | Tree-Style (s) | Speedup |")
+        print("| :--- | :--- | :--- | :--- |")
+        for i, n in enumerate(sizes):
+            speedup = results_v2[i] / results_v3[i]
+            print(f"| {n} | {results_v2[i]:.4f} | {results_v3[i]:.4f} | {speedup:.1f}x |")
+
+        write_to_summary(sizes, results_v2, results_v3)
 
     # Generate Graph
     plt.figure(figsize=(10, 6))
