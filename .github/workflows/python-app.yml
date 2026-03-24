@@ -26,4 +26,9 @@ jobs:
     - name: Run logic verification
       run: |
         cd dynamic_interval_management
-        cd dev && python solution.py
+        python dev/solution.py
+    - name: Upload Performance Graph
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-report
+        path: dynamic_interval_management/streaming_performance.png
