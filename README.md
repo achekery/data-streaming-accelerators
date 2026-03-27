@@ -58,11 +58,14 @@ In benchmarks with dynamic intervals up to $N=3000$, the Interval Tree (Variant 
 
 ### 4. Design Optimizations
 
-#### Node Metadata
+#### Augmented Metadata
 By augmenting the BST with `subtree_max` metadata, I reduced the search-and-merge task from a linear scan to a logarithmic search. This allows the streaming platform to maintain a "Live" merged state with $O(\log N)$ latency per request.
 
+#### Invariant-Driven Correctness
+To ensure system reliability during high-frequency updates, I prioritized **Correctness by Design** by explicitly maintaining the AVL balance and metadata invariants during every mutation (`insert`, `delete`).
+
 #### Architectural Hardening
-By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balancing subtree rotation strategy and removing sentinel node checks throughout the codebase, I simplified the balancing feature and provided a cleaner and more maintainable implementation.
+By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balancing subtree rotation strategy and removing the need for sentinel node checks throughout the codebase, I simplified the balancing feature and provided a cleaner and more maintainable implementation.
 
 #### Python Object-Model Tuning
 To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals.
