@@ -25,7 +25,7 @@ class SuffixPatternRecognition1:
 
     class _ReversePrefixTree:
         @classmethod
-        def as_nested_dict(cls, words: List[str]) -> dict:
+        def as_nested_dict(cls, words: list[str]) -> dict:
             """Make reverse prefix tree as nested dict.
             Takes runtime O(N*W) and memory O(N*W)."""
             node_fact = lambda: {'is_tail': False}
@@ -40,7 +40,7 @@ class SuffixPatternRecognition1:
                         p_node['is_tail'] = True
             return head
 
-    def __init__(self, words: List[str]):
+    def __init__(self, words: list[str]) -> None:
         """Make new object for stream query api.
         Takes runtime O(N*W) and memory O(N*W)."""
         _ReversePrefixTree = self.__class__._ReversePrefixTree  # type alias
@@ -72,7 +72,7 @@ class SuffixPatternRecognition1:
                 return True  # early exit on match success
         return False
 
-def benchmark_static():
+def benchmark_static() -> None:
     """Simple test runner to verify all variants."""
     test_cases = [
         # Test Case #1
