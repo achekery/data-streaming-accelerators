@@ -78,7 +78,7 @@ def benchmark_static() -> None:
         # Test Case #1
         [
             ["__init__", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query"],
-            [[["ec", "ce", "racecar"]], ["r"], ["a"], ["c"], ["e"], ["c"], ["a"], ["r"]],
+            [["ec", "ce", "racecar"], ["r"], ["a"], ["c"], ["e"], ["c"], ["a"], ["r"]],
             [None, False, False, False, True, True, False, True]
         ]
     ]
@@ -93,10 +93,9 @@ def benchmark_static() -> None:
                 if func_name == "__init__":
                     uut = test_unit(func_args)
                 else:
-                    result = getattr(uut, func_name)(func_args)
+                    result = getattr(uut, func_name)(*func_args)
                     assert result == expected, f"!!! {test_unit=}, : Failed (should be equal): {result=}, {expected=}"
             print(f">>> {test_unit=}: Succeeded")
 
 if __name__ == "__main__":
     benchmark_static()
-
