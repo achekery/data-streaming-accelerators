@@ -89,13 +89,13 @@ def benchmark_static() -> None:
     for test_unit in test_units:
         for test_case in test_cases:
             uut = None
-            for func_name, func_args, expected in zip(test_case):
+            for func_name, func_args, expected in zip(*test_case):
                 if func_name == "__init__":
                     uut = test_unit(func_args)
                 else:
                     result = getattr(uut, func_name)(func_args)
                     assert result == expected, f"!!! {test_unit=}, : Failed (should be equal): {result=}, {expected=}"
-        print(f">>> {test_unit=}: Succeeded")
+            print(f">>> {test_unit=}: Succeeded")
 
 if __name__ == "__main__":
     benchmark_static()
