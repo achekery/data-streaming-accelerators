@@ -77,7 +77,7 @@ def benchmark_static() -> None:
     test_cases = [
         # Test Case #1
         [
-            [["__init__", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query"]],
+            ["__init__", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query", "query"],
             [[["ec", "ce", "racecar"]], ["r"], ["a"], ["c"], ["e"], ["c"], ["a"], ["r"]],
             [None, False, False, False, True, True, False, True]
         ]
