@@ -1,4 +1,4 @@
-# Data Streaming
+# Data Streaming Accelerators
 
 ## Dynamic Interval Management
 
