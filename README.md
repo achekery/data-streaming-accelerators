@@ -1,5 +1,7 @@
 # Data Streaming Accelerators
 
+![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
+
 ## Dynamic Interval Management
 
 ### 1. Design Summary
@@ -71,8 +73,6 @@ By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balanci
 To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals.
 
 ### 5. Getting Started
-
-![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
 
 This design requires **Python 3.11+**.
 
