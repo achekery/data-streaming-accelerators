@@ -4,7 +4,7 @@
 
 ## 1. Design Summary
 
-For suffix pattern recognition with $K$ suffix patterns (length $W$) and 1 query pattern (length $N$), using **reverse-traversal prefix tree search** is efficient because it can model common ancestor ordering with reverse encoding (by inserting suffix patterns in reverse order during setup and searching in reverse order during queries) and check the multiple patterns over a single root-to-leaf pass (taking runtime $O(K*W)$ for one-time setup and $O(W)$ for each query). This improves over using direct suffix pattern search which must check the multiple patterns over separate array passes (taking $O(K*W)$ for each query) or using forward-traversal prefix tree search which cannot model common ancestor ordering and must check the multiple patterns over separate root-to-leaf passes (taking runtime $O(K*W)$ for one-time setup and $O(K*W)$ for each query).
+For suffix pattern recognition with $K$ suffix patterns (length $W$) and 1 query pattern (length $N$), using **reverse-traversal prefix tree search** is efficient because it can model common ancestor ordering with reverse encoding (by inserting suffix patterns in reverse order during setup and searching in reverse order during queries) and check the multiple patterns over a single root-to-leaf pass (taking runtime $O(K\*W)$ for one-time setup and $O(W)$ for each query). This improves over using direct suffix pattern search which must check the multiple patterns over separate array passes (taking $O(K\*W)$ for each query) or using forward-traversal prefix tree search which cannot model common ancestor ordering and must check the multiple patterns over separate root-to-leaf passes (taking runtime $O(K\*W)$ for one-time setup and $O(K\*W)$ for each query).
 
 For batch data (offline scenario), reading the query pattern from a static array (size $N$) with a reverse iterator takes $O(1)$ auxiliary space. For streaming data (online scenario), reading the query pattern from a history array (size $W$) reconstructed from the stream takes $O(W)$ auxiliary space.
 
@@ -12,10 +12,10 @@ For batch data (offline scenario), reading the query pattern from a static array
 
 | Operation | Direct Search (v1) | Forward-traversal (v2) | Reverse-traversal (v3) | Comparison |
 | :--- | :--- | :--- | :--- | :--- |
-| **Initial Setup** | $O(1)$ | $O(K*W)$ | $O(K*W)$ | v1 is superior |
-| **Batch Queries (N)** | $O(K*W)$ | $O(K*W)$ | $O(W)$ | v3 is superior |
-| **Streaming Queries (1)** | $O(K*W)$ | $O(K*W)$ | $O(W)$ | v3 is superior |
-| **Space Complexity** | $O(1)$ | $O(K*W)$ | $O(K*W)$ | v1 is superior |
+| **Initial Setup** | $O(1)$ | $O(K\*W)$ | $O(K\*W)$ | v1 is superior |
+| **Batch Queries (N)** | $O(K\*W)$ | $O(K\*W)$ | $O(W)$ | v3 is superior |
+| **Streaming Queries (1)** | $O(K\*W)$ | $O(K\*W)$ | $O(W)$ | v3 is superior |
+| **Space Complexity** | $O(1)$ | $O(K\*W)$ | $O(K\*W)$ | v1 is superior |
 
 #### 🚀 Reverse Encoding (Visual)
 
