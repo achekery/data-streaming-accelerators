@@ -11,11 +11,11 @@ For batch data (offline scenario), reading the query pattern from a static array
 ### 📊 Complexity Analysis
 
 | Operation | Direct Search (v1) | Forward-traversal (v2) | Reverse-traversal (v3) | Comparison |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- | :--- |
 | **Initial Setup** | $O(1)$ | $O(K*W)$ | $O(K*W)$ | v1 is superior |
 | **Batch Queries (N)** | $O(K*W)$ | $O(K*W)$ | $O(W)$ | v3 is superior |
 | **Streaming Queries (1)** | $O(K*W)$ | $O(K*W)$ | $O(W)$ | v3 is superior |
-| **Space Complexity** | $O(1)$ | $O(K*W)$ | $O(K*W)$ | v3 is superior |
+| **Space Complexity** | $O(1)$ | $O(K*W)$ | $O(K*W)$ | v1 is superior |
 
 #### 🚀 Reverse Encoding (Visual)
 
