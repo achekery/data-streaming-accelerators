@@ -1,3 +1,1 @@
 # Dynamic Interval Management
-
-Placeholder
