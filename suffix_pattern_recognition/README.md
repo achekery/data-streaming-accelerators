@@ -21,40 +21,8 @@ For batch data (offline scenario), reading the query pattern from a static array
 
 The advantage of reverse-traversal prefix tree search is that it can check multiple suffix patterns at once, ensuring $O(W)$ query time (and is independent of the suffix pattern count $K$ and the query pattern length $N$). This is possible because of reverse encoding.
 
-```mermaid
-graph TD
-    subgraph "Reverse Prefix Tree (Stored Structure)"
-    direction TD
-    Root((Root)) --> C((c))
-    C --> E_tail((e*))
-    Root --> E((e))
-    E --> C_tail((c*))
-    Root --> R1((r))
-    R1 --> A1((a))
-    A1 --> C2((c))
-    C2 --> E2((e))
-    E2 --> C3((c))
-    C3 --> A2((a))
-    A2 --> R2_tail((r*))
-    end
+![Diagram for reverse encoding](static/diagram-image.png)
 
-    subgraph "Streaming Timeline: 'racecar'"
-    T1[T=1: 'r'] --> H1["History: [r] <br/> Search: r -> (No Tail)"]
-    T2[T=2: 'a'] --> H2["History: [r, a] <br/> Search: a -> (Fail)"]
-    T3[T=3: 'c'] --> H3["History: [r, a, c] <br/> Search: c -> (No Tail)"]
-    T4[T=4: 'e'] --> H4["History: [r, a, c, e] <br/> Search: e -> c -> MATCH 'ce'"]
-    T5[T=5: 'c'] --> H5["History: [r, a, c, e, c] <br/> Search: c -> e -> MATCH 'ec'"]
-    T6[T=6: 'a'] --> H6["History: [..., c, a] <br/> Search: a -> (Fail)"]
-    T7[T=7: 'r'] --> H7["History: [r,a,c,e,c,a,r] <br/> Search: r->a->c->e->c->a->r -> MATCH 'racecar'"]
-    end
-
-    style H4 fill:#ccffcc,stroke:#333
-    style H5 fill:#ccffcc,stroke:#333
-    style H7 fill:#ccffcc,stroke:#333
-    style E_tail fill:#f9f,stroke:#333
-    style C_tail fill:#f9f,stroke:#333
-    style R2_tail fill:#f9f,stroke:#333
-```
 
 ## 2. Design Approaches & Trade-offs
 
