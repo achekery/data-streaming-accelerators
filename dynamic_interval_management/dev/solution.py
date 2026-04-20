@@ -378,7 +378,7 @@ import json
 import sys
 
 def benchmark_static():
-    """Simple test runner to verify all variants."""
+    """Simple test runner to verify correctness in static case."""
     test_cases = [
         ([[1, 3], [2, 6], [8, 10], [15, 18]], [[1, 6], [8, 10], [15, 18]]),
         ([[1, 4], [4, 5]], [[1, 5]]),
@@ -401,34 +401,31 @@ import random
 import matplotlib.pyplot as plt
 
 def benchmark_streaming():
+    """Simple test runner to measure performance in streaming case."""
     print("🚀 Starting Streaming Benchmark...")
-    # N is the number of sequential updates
     sizes = [100, 500, 1000, 2000, 3000]
-    results_v2 = [] # Batch-optimized (Two-Pointer)
-    results_v3 = [] # Streaming-optimized (AVL Tree)
+    results_v2, results_v3 = [], []
 
     for n in sizes:
-        # Generate random intervals
+        # Make n samples of random data for streaming case.
         raw_data = []
         for _ in range(n):
             lo = random.randint(0, 10000)
             hi = lo + random.randint(1, 100)
             raw_data.append([lo, hi])
 
-        # --- Benchmark Solution 2 (Batch approach used for Streaming) ---
+        # Get results for v2 "batch-style" approach.
         def run_v2_streaming():
             uut = Solution2()
             current_state = []
             for interval in raw_data:
                 current_state.append(interval)
-                uut.merge(current_state) # Must re-sort everything
+                uut.merge(current_state)
         
         t2 = timeit.timeit(lambda: run_v2_streaming(), number=1)
         results_v2.append(t2)
 
-        # --- Benchmark Solution 3 (Tree approach) ---
-        # Note: We simulate streaming by calling merge once 
-        # because your merge() already iterates and inserts.
+        # Get results for v3 "tree-style" approach.
         def run_v3_streaming():
             uut = Solution3()
             uut.merge(raw_data)
@@ -438,12 +435,14 @@ def benchmark_streaming():
         
         print(f"n={n} | Batch-Style: {t2:.4f}s | Tree-Style: {t3:.4f}s")
 
+    # Write results to console stdout for logging.
     print("| Input Size (N) | Batch-Style (s) | Tree-Style (s) | Speedup |")
     print("| :--- | :--- | :--- | :--- |")
     for i, n in enumerate(sizes):
         speedup = results_v2[i] / results_v3[i]
         print(f"| {n} | {results_v2[i]:.4f} | {results_v3[i]:.4f} | {speedup:.1f}x |")
 
+    # Write results to github summary for viewing.
     write_to_summary(sizes, results_v2, results_v3)
 
     # Generate Graph
