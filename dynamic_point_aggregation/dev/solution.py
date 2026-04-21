@@ -48,11 +48,6 @@ class DynamicPointAggregationV1:
         intervals.append([point_a, point_b])
         return intervals
 
-# Your SummaryRanges object will be instantiated and called as such:
-# obj = SummaryRanges()
-# obj.addNum(value)
-# param_2 = obj.getIntervals()
-
 from sortedcontainers import SortedSet
 
 class DynamicPointAggregationV2:
@@ -141,7 +136,8 @@ class DynamicPointAggregationV2:
             list(pair) for pair in zip(self._lower_bounds, self._upper_bounds)
         ]
 
-# Your SummaryRanges object will be instantiated and called as such:
-# obj = SummaryRanges()
-# obj.addNum(value)
-# param_2 = obj.getIntervals()
+def benchmark_static():
+    pass
+
+if __name__ == "__main__":
+    benchmark_static()
