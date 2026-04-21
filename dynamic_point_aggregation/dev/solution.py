@@ -137,7 +137,7 @@ class DynamicPointAggregationV2:
         ]
 
 def benchmark_static():
-    pass
+    raise NotImplementedError()
 
 if __name__ == "__main__":
     benchmark_static()
