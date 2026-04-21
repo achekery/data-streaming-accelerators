@@ -1,12 +1,12 @@
-""" # Design:
+""" # Design Summary:
     - Intuition:
         - For dynamic point aggregation with disjoint intervals,
             new values are either enclosed by, adjacent to, or distinct from
-            the existing intervals already formed from stream history
+            the existing intervals already formed from stream history.
 """
 
 class DynamicPointAggregationV1:
-    """ # Design:
+    """ # Design Details:
         - Approach:
             - V1 The naive approach updates an unsorted set to add new values
             and uses the sweep line method to find intervals.
@@ -51,7 +51,7 @@ class DynamicPointAggregationV1:
 from sortedcontainers import SortedSet
 
 class DynamicPointAggregationV2:
-    """ # Design:
+    """ # Design Details:
         - Approach:
             - V2 The efficient approach updates 2 sorted sets to add new values
             and uses the binary search method to find intervals.
@@ -137,7 +137,64 @@ class DynamicPointAggregationV2:
         ]
 
 def benchmark_static():
-    raise NotImplementedError()
+    """Simple test runner to verify all variants."""
+    test_cases = [
+        [
+            # test_name
+            "Test Case 1: Empty Stream",
+            # func_name
+            ["__init__", "getIntervals"],
+            # func_args
+            [[], []],
+            # func_returns
+            [None, []]
+        ],
+        [
+            # test_name
+            "Test Case 2: Merge Adjacent Intervals",
+            # func_name
+            ["__init__", "addNum", "addNum", "addNum", "getIntervals"],
+            # func_args
+            [[], [1], [3], [2], []],
+            # expec_returns
+            [None, None, None, None, [[1, 3]]]
+        ],
+        [
+            # test_name
+            "Test Case 3: Merge Enclosed Intervals",
+            # func_name
+            ["__init__", "addNum", "addNum", "addNum", "addNum", "addNum", "addNum", "getIntervals"],
+            # func_args
+            [[], [1], [3], [2], [1], [3], [2], []],
+            # expec_returns
+            [None, None, None, None, None, None, None, [[1, 3]]]
+        ],
+        [
+            # test_name
+            "Test Case 4: Merge Distinct Intervals",
+            # func_name
+            ["__init__", "addNum", "addNum", "addNum", "getIntervals"],
+            # func_args
+            [[], [1], [3], [7], []],
+            # expec_returns
+            [None, None, None, None, [[1, 1], [3, 3], [7, 7]]]
+        ],
+    ]
+    test_units = [
+        DynamicPointAggregationV1,
+        DynamicPointAggregationV2,
+    ]
+    for test_unit in test_units:
+        for test_case in test_cases:
+            test_name = test_case[0]; uut = None
+            for _, func_name, func_args, expec_returns in zip(*test_case):
+                if func_name == "__init__":
+                    uut = test_unit(*func_args)
+                else:
+                    returns = getattr(uut, func_name)(*func_args)
+                    assert returns == expec_returns, f"!!! {test_unit=}, : Failed (should be equal): {returns=}, {expec_returns=}"
+            print(f">>> {test_name=}: Succeeded")
+        print(f">>> {test_unit=}: Succeeded")
 
 if __name__ == "__main__":
     benchmark_static()
