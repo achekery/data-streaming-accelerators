@@ -8,8 +8,8 @@ In offline scenarios (batch data) that have predictable usage patterns with many
 | Operation | Batch Variant (V1) | Streaming Variant (V2) | Comparison |
 | :--- | :--- | :--- | :--- |
 | **Initial Setup** | $O(1)$ | $O(1)$ | Equivalent |
-| **Batch Total (N Put, 1 Get)** | $O(N Log N)$ | $O(N Log N)$ | Equivalent |
-| **Batch Total (N Put, 0 Get)** | $O(N)$ | $O(N Log N)$ | V1 is superior |
+| **Batch Scenario (N Put, 1 Get)** | $O(N Log N)$ | $O(N Log N)$ | Equivalent |
+| **Streaming Scenario (N Put, K Get)** | $O(N + K \\* N Log N)$ | $O(N Log N + K \\* N)$ | V2 is superior |
 
 ## 2. Design Details
 The batch efficient approach uses an unordered set to add new values as data points in constant time per put operation and does one pass over a new sorted list with sweep line method to generate disjoint intervals in log-linear time per get operation. This approach is **stateless** aside from the raw stream history.
