@@ -17,9 +17,24 @@ Offline scenarios (batch data) have predictable usage patterns with many more pu
 | **Space Complexity** | $O(N)$ | $O(N)$ | Equivalent
 
 ## 2. Design Details
-The batch variant uses an unordered set to add new values as data points in $O(1)$ per put operation and does one pass over a new sorted list with sweep line method to generate disjoint intervals in $O(N Log N)$ per get operation.
 
-The streaming variant uses two sorted sets to add new values as interval bounds in $O(Log N)$ per put operation (or $O(\sqrt N)$ with python `sortedcontainers`) and does one pass over the existing sorted sets with sweep line method to generate disjoint intervals in $O(N)$ per get operation.
+### Approaches
+The batch variant (V1) uses an unordered set to add new values as data points in $O(1)$ per put operation and does one pass over a new sorted list with sweep line method to generate disjoint intervals in $O(N Log N)$ per get operation.
+
+The streaming variant (V2) uses two sorted sets to add new values as interval bounds in $O(Log N)$ per put operation (or $O(\sqrt N)$ with python `sortedcontainers`) and does one pass over the existing sorted sets with sweep line method to generate disjoint intervals in $O(N)$ per get operation.
+
+## 3. Design Trade-offs
+
+#### Streaming Benchmark Results
+
+TBD
+
+
+## 4. Design Optimizations
+
+### State Transitions
+To ensure new values are correctly merged for the overlap states of being enclosed by, adjacent to, or distinct from existing intervals, I applied **Correctness by Design** by separately handling the enclosed-by case (early exit when lower bounds and upper bounds for new value are already aligned), the adjacent-to case (either join with both neighbors if they are adjacent or join with one neighbor if it is adjacent), and the distinct-from case (insert new interval bounds for new value).
+
 
 ## 3. Getting Started
 
@@ -27,7 +42,7 @@ This design requires **Python 3.11+**.
 
 To run the regression tests for this design:
 ```bash
-python -m pip install sortedcontainers
-cd dynamic_interval_management
+cd dynamic_point_aggregation
+python -m pip install -r requirements.txt
 python dev/solution.py
 ```

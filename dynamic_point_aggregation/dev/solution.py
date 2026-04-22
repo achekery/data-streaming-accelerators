@@ -196,5 +196,179 @@ def benchmark_static():
             print(f">>> {test_name=}: Succeeded")
         print(f">>> {test_unit=}: Succeeded")
 
+import itertools
+import os
+import random
+import timeit
+
+from matplotlib import pyplot as plt
+import pandas as pd
+
+def benchmark_streaming():
+    """Simple test runner to validate all variants."""
+
+    def _log_emitter(line, sink=print):
+        # Write results to console stdout for logging.
+        sink(line)
+        # Write results to github summary for viewing.
+        if (summary_file := os.getenv('GITHUB_STEP_SUMMARY')):
+            with open(summary_file, 'a') as f:
+                f.write(line)
+
+    data_sizes = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000]
+    usage_ratios = [1, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    test_cases = list(itertools.product(data_sizes, usage_ratios))
+    test_units = [
+        DynamicPointAggregationV1,
+        DynamicPointAggregationV2,
+    ]
+    log_header = [
+        "TestCase",
+        "DataSize",
+        "UsageRatio",
+        "V1ElapsedSec",
+        "V2ElapsedSec",
+        "SpeedupV2V1",
+    ]
+    _log_emitter("| " + " | ".join(log_header) + " |")
+    _log_emitter("| " + " | ".join([":---"] * len(log_header)) + " |")
+
+    all_results = [0] * len(test_cases)
+    for test_case_id, test_case in enumerate(test_cases):
+        data_size, usage_ratio = test_case
+        test_units_timed = [0] * len(test_units)
+        for test_unit_id, test_unit in enumerate(test_units):
+            uut = test_unit()
+
+            def _events():
+                nonlocal data_size; nonlocal usage_ratio
+                random.seed(42)  # reproducible results
+                for i in range(data_size):
+                    # sent get request once every `usage_ratio` events
+                    if usage_ratio != 0 and i % usage_ratio == 0:
+                        yield ["getIntervals", []]
+                    # send add request otherwise
+                    else:
+                        yield ["addNum", [random.randint(0, 10000)]]
+
+            def _harness(events):
+                nonlocal uut
+                for func_name, func_args in events:
+                    getattr(uut, func_name)(*func_args)
+
+            timed = timeit.timeit(lambda: _harness(_events()), number=1)
+            test_units_timed[test_unit_id] = timed
+
+        test_case_results = [
+            test_case_id,
+            data_size,
+            usage_ratio,
+            test_units_timed[0], # v1 elapsed
+            test_units_timed[1], # v2 elapsed
+            test_units_timed[1] / test_units_timed[0]  # speedup
+        ]
+        log_test_case = [
+            f"{test_case_results[0]:d}",
+            f"{test_case_results[1]:d}",
+            f"{test_case_results[2]:d}",
+            f"{test_case_results[3]:.3f}",
+            f"{test_case_results[4]:.3f}",
+            f"{test_case_results[5]:.3f}",
+        ]
+        _log_emitter("| " + " | ".join(log_test_case) + " |")
+        all_results[test_case_id] = test_case_results
+
+    def _generate_graph(results):
+        nonlocal data_sizes; nonlocal usage_ratios
+        n_data_sizes = len(data_sizes)
+        n_usage_ratios = len(usage_ratios)
+
+        df = pd.DataFrame(results, columns=log_header)
+
+        # group by data size
+        for i, data_size in enumerate(data_sizes):
+            _df = df[df["DataSize"] == data_size]
+
+            fig, ax1 = plt.subplots()
+            ax1.plot(
+                _df["UsageRatio"],
+                _df["V1ElapsedSec"],
+                label="Batch Variant V1 (sec)",
+                marker="o",
+                color="blue",
+            )
+            ax1.plot(
+                _df["UsageRatio"],
+                _df["V2ElapsedSec"],
+                label="Streaming Variant V2 (sec)",
+                marker="+",
+                color="green",
+            )
+            ax1.set_ylabel("Elapsed Time (sec)")
+            ax1.set_xlabel("Usage Ratio R (%)")
+            ax1.legend(loc="lower right")
+
+            ax2 = ax1.twinx()
+            ax2.plot(
+                _df["UsageRatio"],
+                _df["SpeedupV2V1"],
+                label="Speedup V2/V1",
+                marker="x",
+                color="red",
+            )
+            ax2.set_ylabel("Speedup V2/V1 (Gain)")
+            ax2.legend(loc="upper right")
+
+            plt.show()
+            plt.title(f'Streaming (N={data_size}): Speedup by Usage Ratio R')
+            plt.grid(True)
+            plt.savefig(f'streaming_data_size_{data_size}.png')
+
+
+        # group by usage ratio
+        for i, usage_ratio in enumerate(usage_ratios):
+            _df = df[df["UsageRatio"] == usage_ratio]
+
+            fig, ax1 = plt.subplots()
+            ax1.plot(
+                _df["DataSize"],
+                _df["V1ElapsedSec"],
+                label="Batch Variant V1 (sec)",
+                marker="o",
+                color="blue",
+            )
+            ax1.plot(
+                _df["DataSize"],
+                _df["V2ElapsedSec"],
+                label="Streaming Variant V2 (sec)",
+                marker="+",
+                color="green",
+            )
+            ax1.set_ylabel("Elapsed Time (sec)")
+            ax1.set_xlabel("Data Size (N)")
+            ax1.legend(loc="lower right")
+
+            ax2 = ax1.twinx()
+            ax2.plot(
+                _df["DataSize"],
+                _df["SpeedupV2V1"],
+                label="Speedup V2/V1",
+                marker="x",
+                color="red",
+            )
+            ax2.set_ylabel("Speedup V2/V1 (Gain)")
+            ax2.legend(loc="upper right")
+
+            plt.show()
+            plt.title(f'Streaming (R={usage_ratio}): Speedup by Data Size')
+            plt.grid(True)
+            plt.savefig(f'streaming_usage_ratio_{usage_ratio}.png')
+
+
+
+    # _generate_graph(all_results)
+    # TODO: Enable once we know what data to show
+
 if __name__ == "__main__":
     benchmark_static()
+    benchmark_streaming()
