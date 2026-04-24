@@ -218,8 +218,8 @@ import pandas as pd
 def benchmark_streaming():
     """Simple test runner to validate all variants."""
 
-    data_sizes = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
-    egress_ratios = [0.08, 0.10, 0.20, 0.50, 0.80, 0.90, 0.92]
+    data_sizes = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 500_000]
+    egress_ratios = [0.10, 0.20, 0.50, 0.80, 0.90]
     test_cases = list(itertools.product(data_sizes, egress_ratios))
     test_units = [
         DynamicPointAggregationV1,
