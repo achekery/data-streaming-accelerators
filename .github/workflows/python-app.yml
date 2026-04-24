@@ -39,11 +39,11 @@ jobs:
     - name: Upload Performance Graph 1
       uses: actions/upload-artifact@v4
       with:
-        name: performance-report
+        name: performance-report-1
         path: dynamic_interval_management/streaming_performance.png
 
     - name: Upload Performance Graph 2
       uses: actions/upload-artifact@v4
       with:
-        name: performance-report
+        name: performance-report-2
         path: dynamic_point_aggregation/*.png
