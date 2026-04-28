@@ -218,9 +218,9 @@ import pandas as pd
 def benchmark_streaming():
     """Simple test runner to validate all variants."""
 
-    data_sizes = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 500_000]
-    egress_ratios = [0.10, 0.20, 0.50, 0.80, 0.90]
-    test_cases = list(itertools.product(data_sizes, egress_ratios))
+    data_sizes = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
+    request_distrs = [0.20, 0.50, 0.80]
+    test_cases = list(itertools.product(data_sizes, request_distrs))
     test_units = [
         DynamicPointAggregationV1,
         DynamicPointAggregationV2,
@@ -228,7 +228,7 @@ def benchmark_streaming():
     log_header = [
         "TestCaseID",
         "DataSize",
-        "EgressRatio",
+        "RequestDistribution",
         "V1TimeElapsed",
         "V2TimeElapsed",
         "V2V1TimeSpeedup",
@@ -236,40 +236,40 @@ def benchmark_streaming():
     log_summary("| " + " | ".join(log_header) + " |")
     log_summary("| " + " | ".join([":---"] * len(log_header)) + " |")
 
-    def _events(data_size, egress_ratio):
+    def _events(data_size, request_distr):
         random.seed(42)  # reproducible results
-        # simulate request distribution using egress ratio.
-        for _ in range(data_size):
-            if random.random() < egress_ratio:
+        data_size_sent = 0
+        while data_size_sent < data_size:
+            if random.random() < request_distr:
                 yield ["getIntervals", []]
             else:
+                data_size_sent += 1
                 yield ["addNum", [random.randint(0, 10000)]]
 
     def _harness(uut, events):
         for func_name, func_args in events:
             getattr(uut, func_name)(*func_args)
 
-    all_results = [0] * len(test_cases)
+    test_results = [0] * len(test_cases)
     for test_case_id, test_case in enumerate(test_cases):
-        data_size, egress_ratio = test_case
-        test_units_time_elapsed = [0] * len(test_units)
-        for test_unit_id, test_unit in enumerate(test_units):
-            time_elapsed = timeit.timeit(lambda: _harness(test_unit(), _events(data_size, egress_ratio)), number=1)
-            test_units_time_elapsed[test_unit_id] = time_elapsed
-
+        data_size, request_distr = test_case
+        time_elapsed = [
+            timeit.timeit(lambda: _harness(test_unit(), _events(data_size, request_distr)), number=1)
+            for test_unit in test_units
+        ]
         test_case_results = [
             # "TestCaseID",
             test_case_id,
             # "DataSize",
             data_size,
-            # "EgressRatio",
-            egress_ratio,
+            # "RequestDistribution",
+            request_distr,
             # "V1TimeElapsed",
-            test_units_time_elapsed[0],
+            time_elapsed[0],
             # "V2TimeElapsed",
-            test_units_time_elapsed[1],
+            time_elapsed[1],
             # "V2V1TimeSpeedup",
-            test_units_time_elapsed[0] / test_units_time_elapsed[1]
+            time_elapsed[0] / time_elapsed[1]
         ]
         log_test_case = [
             f"{test_case_results[0]:d}",
@@ -280,77 +280,84 @@ def benchmark_streaming():
             f"{test_case_results[5]:.3f}",
         ]
         log_summary("| " + " | ".join(log_test_case) + " |")
-        all_results[test_case_id] = test_case_results
+        test_results[test_case_id] = test_case_results
 
     def _generate_graph(results):
         nonlocal log_header
         df = pd.DataFrame(results, columns=log_header)
 
-        # group by data size
+        # Graph 1: Speedup by Request Distribution
         ndigits_int = max(len(str(x)) for x in df["DataSize"])
         for data_size in df["DataSize"].unique():
             _df = df[df["DataSize"] == data_size]
+            graph_title = f'Speedup by Request Distribution (N={data_size})'
+            file_name = f'speedup_by_request_distr_data_size_{data_size:0{ndigits_int}d}.png'
 
             fig, ax1 = plt.subplots()
             ax1.plot(
-                _df["EgressRatio"],
+                _df["RequestDistribution"],
                 _df["V1TimeElapsed"],
-                label="Batch Variant V1 (sec)",
+                label="Batch V1",
                 marker="o",
                 color="blue",
             )
             ax1.plot(
-                _df["EgressRatio"],
+                _df["RequestDistribution"],
                 _df["V2TimeElapsed"],
-                label="Streaming Variant V2 (sec)",
-                marker="+",
+                label="Streaming V2",
+                marker="o",
                 color="green",
             )
+            ymax = max(max(_df["V1TimeElapsed"]), max(_df["V2TimeElapsed"]))
+            ax1.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax1.set_ylabel("Time Elapsed (sec)")
-            ax1.set_xlabel("Egress Ratio (R)")
+            ax1.set_xlabel("Request Distribution (R)")
 
             ax2 = ax1.twinx()
             ax2.plot(
-                _df["EgressRatio"],
+                _df["RequestDistribution"],
                 _df["V2V1TimeSpeedup"],
+                linestyle="--",
+                linewidth=2,
                 label="Speedup V2/V1",
-                marker="x",
                 color="red",
             )
-            ax2.set_ylim(0, None)  # set ymin to zero
+            ymax = max(_df["V2V1TimeSpeedup"])
+            ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax2.set_ylabel("Speedup V2/V1 (Gain)")
 
             lines1, labels1 = ax1.get_legend_handles_labels()
             lines2, labels2 = ax2.get_legend_handles_labels()
             ax2.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
 
-            plt.title(f'Streaming (N={data_size}): Speedup by Egress Ratio')
-            plt.grid(True); plt.tight_layout()
-            file_name = f'speedup_by_egress_ratio_data_size_{data_size:0{ndigits_int}d}.png'
-            plt.savefig(file_name)
-            plt.close(fig)  # avoid memory leakage
-            print(f"Created {file_name=}")
+            plt.title(graph_title); plt.grid(True); plt.tight_layout()
+            plt.savefig(file_name); plt.close(fig)
+            log_summary(f"created {file_name=}")
 
-        # group by egress ratio
-        ndigits_dec = max(len(str(x).split(".")[1]) for x in df["EgressRatio"])
-        for egress_ratio in df["EgressRatio"].unique():
-            _df = df[df["EgressRatio"] == egress_ratio]
+        # Graph 2: Speedup by Data Size
+        ndigits_dec = max(len(str(x).split(".")[1]) for x in df["RequestDistribution"])
+        for request_distr in df["RequestDistribution"].unique():
+            _df = df[df["RequestDistribution"] == request_distr]
+            graph_title = f'Speedup by Data Size (R={request_distr})'
+            file_name = f'speedup_by_data_size_request_distr{request_distr:0.{ndigits_dec}f}.png'
 
             fig, ax1 = plt.subplots()
             ax1.plot(
                 _df["DataSize"],
                 _df["V1TimeElapsed"],
-                label="Batch Variant V1 (sec)",
+                label="Batch V1",
                 marker="o",
                 color="blue",
             )
             ax1.plot(
                 _df["DataSize"],
                 _df["V2TimeElapsed"],
-                label="Streaming Variant V2 (sec)",
-                marker="+",
+                label="Streaming V2",
+                marker="o",
                 color="green",
             )
+            ymax = max(max(_df["V1TimeElapsed"]), max(_df["V2TimeElapsed"]))
+            ax1.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax1.set_ylabel("Time Elapsed (sec)")
             ax1.set_xlabel("Data Size (N)")
 
@@ -358,26 +365,24 @@ def benchmark_streaming():
             ax2.plot(
                 _df["DataSize"],
                 _df["V2V1TimeSpeedup"],
+                linestyle="--",
+                linewidth=2,
                 label="Speedup V2/V1",
-                marker="x",
                 color="red",
             )
-            ax2.set_ylim(0, None)  # set ymin to zero
+            ymax = max(_df["V2V1TimeSpeedup"])
+            ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax2.set_ylabel("Speedup V2/V1 (Gain)")
 
             lines1, labels1 = ax1.get_legend_handles_labels()
             lines2, labels2 = ax2.get_legend_handles_labels()
             ax2.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
 
-            plt.title(f'Streaming (R={egress_ratio}): Speedup by Data Size')
-            plt.grid(True); plt.tight_layout()
-            file_name = f'speedup_by_data_size_egress_ratio_{egress_ratio:0.{ndigits_dec}f}.png'
-            # file_name = f'speedup_by_egress_ratio_data_size_{data_size:0{data_size_maxlen}d}.png'
-            plt.savefig(file_name)
-            plt.close(fig)  # avoid memory leakage
-            print(f"Created {file_name=}")
+            plt.title(graph_title); plt.grid(True); plt.tight_layout()
+            plt.savefig(file_name); plt.close(fig)
+            log_summary(f"created {file_name=}")
 
-    _generate_graph(all_results)
+    _generate_graph(test_results)
 
 if __name__ == "__main__":
     benchmark_static()
