@@ -192,7 +192,7 @@ def benchmark_static():
                     uut = test_unit(*func_args)
                 else:
                     returns = getattr(uut, func_name)(*func_args)
-                    assert returns == expec_returns, f"!!! {test_unit=}, : Failed (should be equal): {returns=}, {expec_returns=}"
+                    assert returns == expec_returns, f"!!! {test_unit=}, {test_name=}: Failed (should be equal): {returns=}, {expec_returns=}"
             print(f">>> {test_name=}: Succeeded")
         print(f">>> {test_unit=}: Succeeded")
 
@@ -219,7 +219,7 @@ def benchmark_streaming():
     """Simple test runner to validate all variants."""
 
     data_sizes = [100, 200, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 50_000]
-    request_distrs = [0.20, 0.50, 0.80]
+    request_distrs = [0.10, 0.20, 0.50, 0.80]
     test_cases = list(itertools.product(data_sizes, request_distrs))
     test_units = [
         DynamicPointAggregationV1,
@@ -286,55 +286,7 @@ def benchmark_streaming():
         nonlocal log_header
         df = pd.DataFrame(results, columns=log_header)
 
-        # Graph 1: Speedup by Request Distribution
-        ndigits_int = max(len(str(x)) for x in df["DataSize"])
-        for data_size in df["DataSize"].unique():
-            _df = df[df["DataSize"] == data_size]
-            graph_title = f'Speedup by Request Distribution (N={data_size})'
-            file_name = f'speedup_by_request_distr_data_size_{data_size:0{ndigits_int}d}.png'
-
-            fig, ax1 = plt.subplots()
-            ax1.plot(
-                _df["RequestDistribution"],
-                _df["V1TimeElapsed"],
-                label="Batch V1",
-                marker="o",
-                color="blue",
-            )
-            ax1.plot(
-                _df["RequestDistribution"],
-                _df["V2TimeElapsed"],
-                label="Streaming V2",
-                marker="o",
-                color="green",
-            )
-            ymax = max(max(_df["V1TimeElapsed"]), max(_df["V2TimeElapsed"]))
-            ax1.set_ylim(0, 1.2*ymax)  # add headroom for legend
-            ax1.set_ylabel("Time Elapsed (sec)")
-            ax1.set_xlabel("Request Distribution (R)")
-
-            ax2 = ax1.twinx()
-            ax2.plot(
-                _df["RequestDistribution"],
-                _df["V2V1TimeSpeedup"],
-                linestyle="--",
-                linewidth=2,
-                label="Speedup V2/V1",
-                color="red",
-            )
-            ymax = max(_df["V2V1TimeSpeedup"])
-            ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
-            ax2.set_ylabel("Speedup V2/V1 (Gain)")
-
-            lines1, labels1 = ax1.get_legend_handles_labels()
-            lines2, labels2 = ax2.get_legend_handles_labels()
-            ax2.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
-
-            plt.title(graph_title); plt.grid(True); plt.tight_layout()
-            plt.savefig(file_name); plt.close(fig)
-            log_summary(f"created {file_name=}")
-
-        # Graph 2: Speedup by Data Size
+        # Graph 1: Speedup by Data Size
         ndigits_dec = max(len(str(x).split(".")[1]) for x in df["RequestDistribution"])
         for request_distr in df["RequestDistribution"].unique():
             _df = df[df["RequestDistribution"] == request_distr]
@@ -364,6 +316,54 @@ def benchmark_streaming():
             ax2 = ax1.twinx()
             ax2.plot(
                 _df["DataSize"],
+                _df["V2V1TimeSpeedup"],
+                linestyle="--",
+                linewidth=2,
+                label="Speedup V2/V1",
+                color="red",
+            )
+            ymax = max(_df["V2V1TimeSpeedup"])
+            ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
+            ax2.set_ylabel("Speedup V2/V1 (Gain)")
+
+            lines1, labels1 = ax1.get_legend_handles_labels()
+            lines2, labels2 = ax2.get_legend_handles_labels()
+            ax2.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
+
+            plt.title(graph_title); plt.grid(True); plt.tight_layout()
+            plt.savefig(file_name); plt.close(fig)
+            log_summary(f"created {file_name=}")
+
+        # Graph 2: Speedup by Request Distribution
+        ndigits_int = max(len(str(x)) for x in df["DataSize"])
+        for data_size in df["DataSize"].unique():
+            _df = df[df["DataSize"] == data_size]
+            graph_title = f'Speedup by Request Distribution (N={data_size})'
+            file_name = f'speedup_by_request_distr_data_size_{data_size:0{ndigits_int}d}.png'
+
+            fig, ax1 = plt.subplots()
+            ax1.plot(
+                _df["RequestDistribution"],
+                _df["V1TimeElapsed"],
+                label="Batch V1",
+                marker="o",
+                color="blue",
+            )
+            ax1.plot(
+                _df["RequestDistribution"],
+                _df["V2TimeElapsed"],
+                label="Streaming V2",
+                marker="o",
+                color="green",
+            )
+            ymax = max(max(_df["V1TimeElapsed"]), max(_df["V2TimeElapsed"]))
+            ax1.set_ylim(0, 1.2*ymax)  # add headroom for legend
+            ax1.set_ylabel("Time Elapsed (sec)")
+            ax1.set_xlabel("Request Distribution (R)")
+
+            ax2 = ax1.twinx()
+            ax2.plot(
+                _df["RequestDistribution"],
                 _df["V2V1TimeSpeedup"],
                 linestyle="--",
                 linewidth=2,
