@@ -231,7 +231,8 @@ def benchmark_streaming():
         "RequestDistribution",
         "V1TimeElapsed",
         "V2TimeElapsed",
-        "V2V1TimeSpeedup",
+        "SpeedupV1V2",
+        "SpeedupV2V1",
     ]
     log_summary("| " + " | ".join(log_header) + " |")
     log_summary("| " + " | ".join([":---"] * len(log_header)) + " |")
@@ -268,8 +269,10 @@ def benchmark_streaming():
             time_elapsed[0],
             # "V2TimeElapsed",
             time_elapsed[1],
-            # "V2V1TimeSpeedup",
-            time_elapsed[0] / time_elapsed[1]
+            # "SpeedupV1V2",
+            time_elapsed[1] / time_elapsed[0],
+            # "SpeedupV2V1",
+            time_elapsed[0] / time_elapsed[1],
         ]
         log_test_case = [
             f"{test_case_results[0]:d}",
@@ -278,6 +281,7 @@ def benchmark_streaming():
             f"{test_case_results[3]:.3f}",
             f"{test_case_results[4]:.3f}",
             f"{test_case_results[5]:.3f}",
+            f"{test_case_results[6]:.3f}",
         ]
         log_summary("| " + " | ".join(log_test_case) + " |")
         test_results[test_case_id] = test_case_results
@@ -316,13 +320,13 @@ def benchmark_streaming():
             ax2 = ax1.twinx()
             ax2.plot(
                 _df["DataSize"],
-                _df["V2V1TimeSpeedup"],
+                _df["SpeedupV2V1"],
                 linestyle="--",
                 linewidth=2,
                 label="Speedup V2/V1",
                 color="red",
             )
-            ymax = max(_df["V2V1TimeSpeedup"])
+            ymax = max(_df["SpeedupV2V1"])
             ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax2.set_ylabel("Speedup V2/V1 (Gain)")
 
@@ -364,13 +368,13 @@ def benchmark_streaming():
             ax2 = ax1.twinx()
             ax2.plot(
                 _df["RequestDistribution"],
-                _df["V2V1TimeSpeedup"],
+                _df["SpeedupV2V1"],
                 linestyle="--",
                 linewidth=2,
                 label="Speedup V2/V1",
                 color="red",
             )
-            ymax = max(_df["V2V1TimeSpeedup"])
+            ymax = max(_df["SpeedupV2V1"])
             ax2.set_ylim(0, 1.2*ymax)  # add headroom for legend
             ax2.set_ylabel("Speedup V2/V1 (Gain)")
 
