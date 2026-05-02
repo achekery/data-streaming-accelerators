@@ -16,8 +16,8 @@ class DynamicPointAggregationV1:
             - addNum: Runtime O(1). Memory O(1).
             - getIntervals: Runtime O(N Log N). Memory O(N).
     
-        # Result:
-        - Benchmark:
+        # Static Benchmarks:
+        - Results:
             - 1. Runtime 0 ms (*100%). Memory 19.53 MB (*38%).
             - 2. Runtime 0 ms (*100%). Memory 19.48 MB (*72%).
             - 3. Runtime 0 ms (*100%). Memory 19.58 MB (*38%).
@@ -62,8 +62,8 @@ class DynamicPointAggregationV2:
             - addNum: Runtime O(Sqrt N). Memory O(1).
             - getIntervals:  Runtime O(N). Memory O(N).
     
-        # Result:
-        - Benchmark:
+        # Static Benchmarks:
+        - Results:
             - 1. Runtime 0 ms (*100%). Memory 19.65 MB (*13).
             - 2. Runtime 3 ms (*16%). Memory 19.62 MB (*13).
             - 3. Runtime 3 ms (*16%). Memory 19.67 MB (*13).
