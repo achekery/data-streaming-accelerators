@@ -84,7 +84,7 @@ These results highlight that the batch variant (V1) is suitable for smaller data
 ### State Transitions
 To ensure new point values are correctly merged with existing disjoint intervals, I applied **Correctness by Design** by separately handling the 3 overlap cases: the enclosed-by case (early exit if lower and upper bounds at insertion point are already aligned), the adjacent-to case (join with 1 or 2 neighbors if lower and upper bounds at insertion point are adjacent), and the distinct-from case (insert as new lower and upper bounds).
 
-## 3. Getting Started
+## 5. Getting Started
 
 This design requires **Python 3.11+**.
 
