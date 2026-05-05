@@ -3,12 +3,6 @@ from typing import List, Optional, Self
 from data_streaming_accelerators.common import DynamicIntervalManagementBase
 
 class DynamicIntervalManagementV3(DynamicIntervalManagementBase):
-    """
-    # Submission:
-        - 1: Runtime 4122 ms (*05%). Memory 25.20 MB (*07%).
-        - 2: Runtime 4135 ms (*05%). Memory 25.33 MB (*07%).
-        - 2: Runtime 4126 ms (*05%). Memory 25.26 MB (*07%).
-    """
 
     class IntervalMergeTreeAVLBSTNode:
         SENTINEL_INTERVAL = (10**4+1, -1)
@@ -293,12 +287,6 @@ class DynamicIntervalManagementV3(DynamicIntervalManagementBase):
         return None if not traversal else sorted(traversal)  # sorting optional
 
 class DynamicIntervalManagementV2(DynamicIntervalManagementBase):
-    """
-    # Submission:
-        - 1: Runtime 11 ms (*25%). Memory 23.08 MB (*42%).
-        - 2: Runtime 7 ms (*70%). Memory 23.13 MB (*38%).
-        - 3: Runtime 7 ms (*70%). Memory 23.15 MB (*38%).
-    """
 
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         n = len(intervals)
@@ -336,12 +324,6 @@ class DynamicIntervalManagementV2(DynamicIntervalManagementBase):
         return merged_intervals[:count_intervals]
 
 class DynamicIntervalManagementV1(DynamicIntervalManagementBase):
-    """
-    # Submission:
-        - 1: Runtime 11 ms (*25%). Memory 23.53 MB (*07%).
-        - 2: Runtime 16 ms (*05%). Memory 23.59 MB (*07%).
-        - 3: Runtime 19 ms (*05%). Memory 23.59 MB (*07%).
-    """
 
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         n = len(intervals)
