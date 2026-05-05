@@ -19,9 +19,9 @@ class DynamicPointAggregationApi:
         if (name := kw.get("name", None)) is None:
             return
         elif name in ["batch", "offline"]:
-            return dpa.DynamicIntervalManagementV1()
+            return dpa.DynamicPointAggregationV1()
         elif name in ["streaming", "online"]:
-            return dpa.DynamicIntervalManagementV2()
+            return dpa.DynamicPointAggregationV2()
 
 # class SuffixPatternRecognition:
 #     pass
