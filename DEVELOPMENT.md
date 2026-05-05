@@ -26,3 +26,9 @@ data_streaming_accelerators/
 # install uv from official installer
 wget -qO- https://astral.sh/uv/install.sh | sh
 ```
+
+```
+uv run --group dev --extra benchmark pytest -sv -m func
+uv run --group dev --extra benchmark pytest -sv -m perf
+uv run --group dev --extra benchmark pytest -sv
+```

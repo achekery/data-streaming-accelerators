@@ -26,3 +26,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/data_streaming_accelerators"]
+
+[tool.pytest.ini_options]
+markers = [
+    "func: marks tests as functional tests",
+    "perf: marks tests as performance tests",
+]

@@ -31,7 +31,7 @@ class DynamicPointAggregationV1(DynamicPointAggregationBase):
 
 from sortedcontainers import SortedSet
 
-class DynamicPointAggregationV2:
+class DynamicPointAggregationV2(DynamicPointAggregationBase):
 
     def __init__(self):
         """Make new object for dynamic point aggregation api.

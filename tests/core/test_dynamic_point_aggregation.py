@@ -1,4 +1,5 @@
 import data_streaming_accelerators.core.dynamic_point_aggregation as dpa
+import pytest
 
 import itertools
 import os
@@ -16,6 +17,7 @@ def log_summary(line, sink=print):
         with open(summary_file, 'a') as f:
             f.write(line)
 
+@pytest.mark.func
 def test_benchmark_static():
     """Simple test runner to verify all variants."""
     test_cases = [
@@ -81,6 +83,7 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 import pandas as pd
 
+@pytest.mark.perf
 def test_benchmark_streaming():
     """Simple test runner to validate all variants."""
 

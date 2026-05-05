@@ -1,4 +1,5 @@
 import data_streaming_accelerators.core.dynamic_interval_management as dim
+import pytest
 
 import os
 
@@ -16,6 +17,7 @@ def write_to_summary(sizes, results_v2, results_v3):
 import json
 import sys
 
+@pytest.mark.func
 def test_benchmark_static():
     """Simple test runner to verify correctness in static case."""
     test_cases = [
@@ -44,6 +46,7 @@ import timeit
 import random
 import matplotlib.pyplot as plt
 
+@pytest.mark.perf
 def test_benchmark_streaming():
     """Simple test runner to measure performance in streaming case."""
     print("🚀 Starting Streaming Benchmark...")

@@ -1,7 +1,7 @@
 import data_streaming_accelerators.common as common
 import data_streaming_accelerators.core.dynamic_interval_management as dim
 import data_streaming_accelerators.core.dynamic_point_aggregation as dpa
-# from data_streaming_accelerators.core import suffix_pattern_recognition as spr
+import data_streaming_accelerators.core.suffix_pattern_recognition as spr
 
 class DynamicIntervalManagementApi:
     @classmethod
@@ -23,5 +23,13 @@ class DynamicPointAggregationApi:
         elif name in ["streaming", "online"]:
             return dpa.DynamicPointAggregationV2()
 
-# class SuffixPatternRecognition:
-#     pass
+class SuffixPatternRecognitionApi:
+    @classmethod
+    def get_variant(cls, *ar, **kw) -> common.SuffixPatternRecognitionBase:
+        if (name := kw.get("name", None)) is None:
+            return
+        elif name in ["batch", "offline"]:
+            return
+        elif name in ["streaming", "online"]:
+            words = ar[0]
+            return spr.SuffixPatternRecognitionV1(words)
