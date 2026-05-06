@@ -20,7 +20,7 @@ The theoretical lower bound for merging $N$ static intervals is $\Omega(N \log N
 
 The advantage of an Augmented AVL Interval Tree is its ability to prune search branches that cannot contain an overlap, ensuring $O(\log N)$ search time.
 
-![Diagram of Pruning Logic](dynamic_interval_management/static/pruning-diagram.png)
+![Diagram of Pruning Logic](docs/dynamic_interval_management/static/pruning-diagram.png)
 
 ### 2. Design Approaches
 
@@ -56,7 +56,7 @@ In benchmarks with dynamic intervals up to $N=3000$, the Interval Tree (Variant 
 | 2000 | 0.6743 | 0.0383 | 17.6x |
 | 3000 | 1.6093 | 0.0318 | **50.6x** |
 
-![Graph for Performance Report](dynamic_interval_management/static/performance-report-1280x640.png)
+![Graph for Performance Report](docs/dynamic_interval_management/static/performance-report-1280x640.png)
 
 ### 4. Design Optimizations
 
@@ -74,10 +74,9 @@ To reduce object-overhead due to the Python object-model, I implemented **Attrib
 
 ### 5. Getting Started
 
-This design requires **Python 3.11+**.
+This design requires **Python 3.13+**.
 
 To run the regression tests for this design:
 ```bash
-cd dynamic_interval_management
-python dev/solution.py
+uv run --group dev --extra benchmark pytest -sv
 ```
