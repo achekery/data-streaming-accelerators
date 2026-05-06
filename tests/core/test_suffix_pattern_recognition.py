@@ -3,7 +3,7 @@ import data_streaming_accelerators.core.suffix_pattern_recognition as spr
 import pytest
 
 @pytest.mark.func
-def benchmark_static() -> None:
+def test_benchmark_static() -> None:
     """Simple test runner to verify all variants."""
     test_cases = [
         # Test Case #1
@@ -15,7 +15,7 @@ def benchmark_static() -> None:
     ]
     test_units = [
         # Test Unit #1
-        spr.SuffixPatternRecognition1
+        spr.SuffixPatternRecognitionV1
     ]
     for test_unit in test_units:
         for test_case in test_cases:

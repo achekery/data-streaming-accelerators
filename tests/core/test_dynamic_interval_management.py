@@ -33,13 +33,9 @@ def test_benchmark_static():
     ]
 
     for i, sol in enumerate(variants, 1):
-        # print(f"--- Testing Variant {i} ---")
         for intervals, expected in test_cases:
             result = sol.merge(intervals)
-            # Ensure results are sorted for comparison
             assert sorted([list(x) for x in result]) == sorted(expected)
-            # print(f"Input: {intervals} -> Passed")
-        # print(f"Variant {i} Verified Successfully!\n")
 
 from pathlib import Path
 import timeit
@@ -49,6 +45,13 @@ import matplotlib.pyplot as plt
 @pytest.mark.perf
 def test_benchmark_streaming():
     """Simple test runner to measure performance in streaming case."""
+    # AVL Trees and Deep BSTs can hit the default limit (1000) during
+    # heavy stress tests/rotations.
+    sys.setrecursionlimit(5000)
+
+    dir_path = Path("var/artifacts/test_dynamic_interval_management")
+    dir_path.mkdir(parents=True, exist_ok=True)
+
     print("🚀 Starting Streaming Benchmark...")
     sizes = [100, 500, 1000, 2000, 3000]
     results_v2, results_v3 = [], []
@@ -101,15 +104,6 @@ def test_benchmark_streaming():
     plt.ylabel('Total Execution Time (Seconds)')
     plt.legend()
     plt.grid(True)
-    file_path = Path("var/artifacts/streaming_performance.png")
-    file_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(file_path)
+    file_name = "streaming_performance.png"
+    plt.savefig(dir_path / file_name)
     print(f"\n✅ Benchmark complete. Graph saved as '{str(file_path)}'")
-
-# if __name__ == "__main__":
-#     # AVL Trees and Deep BSTs can hit the default limit (1000) during 
-#     # heavy stress tests/rotations.
-#     sys.setrecursionlimit(5000)
-    
-#     benchmark_static()
-#     benchmark_streaming()
