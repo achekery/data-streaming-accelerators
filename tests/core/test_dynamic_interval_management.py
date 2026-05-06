@@ -106,4 +106,4 @@ def test_benchmark_streaming():
     plt.grid(True)
     file_name = "streaming_performance.png"
     plt.savefig(dir_path / file_name)
-    print(f"\n✅ Benchmark complete. Graph saved as '{str(file_path)}'")
+    print(f"\n✅ Benchmark complete. Graph saved as '{file_name}'")

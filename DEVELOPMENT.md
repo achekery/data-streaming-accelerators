@@ -28,7 +28,13 @@ wget -qO- https://astral.sh/uv/install.sh | sh
 ```
 
 ```
+# Run specific markers in pytest
 uv run --group dev --extra benchmark pytest -sv -m func
 uv run --group dev --extra benchmark pytest -sv -m perf
+
+# Run pytest
 uv run --group dev --extra benchmark pytest -sv
+
+# Watch run until it completes.
+gh run watch
 ```
