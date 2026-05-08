@@ -1,6 +1,12 @@
-from typing import List, Optional, Self
+from typing import Any, List, Optional, Self
 
 from data_streaming_accelerators.common import DynamicPointAggregationBase
+from data_streaming_accelerators.common import validators
+
+
+def check_point(value: Any) -> None:
+    if not isinstance(value, int):
+        raise TypeError(f"Point type should be int. Got {type(value)=}")
 
 class DynamicPointAggregationV1(DynamicPointAggregationBase):
 
@@ -9,11 +15,14 @@ class DynamicPointAggregationV1(DynamicPointAggregationBase):
         Takes runtime O(1) and memory O(1)."""
         self._points = set()
 
+    @validators.validate_args([None, check_point])
     def addNum(self, value: int) -> None:
-        """Add new value to stream history if not already added.
+        """Entry point for `put` api.
+        Add new value to stream history if not already added.
         Takes runtime O(1) and memory O(1)."""
         self._points.add(value)  # ignores duplicates
 
+    @validators.validate_args([None])
     def getIntervals(self) -> list[list[int]]:
         """Make interval sequence from stream history.
         Takes runtime O(N Log N) and memory O(N)."""
@@ -40,6 +49,7 @@ class DynamicPointAggregationV2(DynamicPointAggregationBase):
         self._upper_bounds = SortedSet()
         self._bounds_total = 0
 
+    @validators.validate_args([None, check_point])
     def addNum(self, value: int) -> None:
         """Add new value to stream history if not already added.
         Takes runtime O(Sqrt N) and memory O(1)."""
@@ -93,6 +103,7 @@ class DynamicPointAggregationV2(DynamicPointAggregationBase):
             self._upper_bounds.add(value)
             self._bounds_total += 1
 
+    @validators.validate_args([None])
     def getIntervals(self) -> list[list[int]]:
         """Make interval sequence from stream history.
         Takes runtime O(N) and memory O(N)."""

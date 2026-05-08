@@ -1,4 +1,14 @@
 from data_streaming_accelerators.common import SuffixPatternRecognitionBase
+from data_streaming_accelerators.common import validators
+
+from typing import Any
+
+def check_character(char: Any) -> None:
+    if not isinstance(char, str):
+        raise TypeError(f"Character type should be str. Got {type(char)}")
+    if len(char) != 1:
+        raise ValueError(f"Character length should be one. Got {len(char)=}")
+
 
 class SuffixPatternRecognitionV1(SuffixPatternRecognitionBase):
 
@@ -31,8 +41,9 @@ class SuffixPatternRecognitionV1(SuffixPatternRecognitionBase):
         self.history_maxsize = max(len(word) for word in words)
         self.history = []
 
+    @validators.validate_args([None, check_character])
     def query(self, char: str) -> bool:
-        """Search recent chars for suffix match.
+        """Entry point for `query` api.
         Takes runtime O(W) and memory O(W)."""
         # push next char to history (max size W).
         # takes runtime O(1) and memory O(1).
