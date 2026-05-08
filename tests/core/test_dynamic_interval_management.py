@@ -16,6 +16,23 @@ def write_to_summary(sizes, results_v2, results_v3):
 
 import json
 import sys
+from contextlib import nullcontext
+
+@pytest.mark.func
+@pytest.mark.parametrize(
+    "intervals, expectation",
+    [
+        ([], nullcontext()),
+        ([[1,2]], nullcontext()),
+        ([[1,2],[3,4]], nullcontext()),
+        ([[2,1]], pytest.raises(ValueError)),
+        ([["2",1]], pytest.raises(TypeError)),
+        ([[2,"1"]], pytest.raises(TypeError)),
+    ]
+)
+def test_check_intervals(intervals, expectation):
+    with expectation as exp:
+        assert dim.check_intervals(intervals) == exp
 
 @pytest.mark.func
 def test_benchmark_static():

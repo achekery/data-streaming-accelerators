@@ -1,6 +1,20 @@
 import data_streaming_accelerators.core.suffix_pattern_recognition as spr
 
 import pytest
+from contextlib import nullcontext
+
+@pytest.mark.func
+@pytest.mark.parametrize(
+    "char, expectation",
+    [
+        ("a", nullcontext()),
+        (0, pytest.raises(TypeError)),
+        ("abc", pytest.raises(ValueError)),
+    ]
+)
+def test_check_character(char, expectation):
+    with expectation as exp:
+        assert spr.check_character(char) == exp
 
 @pytest.mark.func
 def test_benchmark_static() -> None:

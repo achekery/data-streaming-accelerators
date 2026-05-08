@@ -1,6 +1,15 @@
-from typing import List, Optional, Self
+from typing import Any, List, Optional, Self
 
 from data_streaming_accelerators.common import DynamicIntervalManagementBase
+from data_streaming_accelerators.common import validators
+
+
+def check_intervals(intervals: list[list[Any]]) -> None:
+    for lo, hi in intervals:
+        if not isinstance(lo, int) or not isinstance(hi, int):
+            raise TypeError(f"Interval type should be (int, int). Got {type(lo), type(hi)=}")
+        if lo > hi:
+            raise ValueError(f"Interval value should be non-decreasing. Got {lo, hi=}")
 
 class DynamicIntervalManagementV3(DynamicIntervalManagementBase):
 
@@ -274,8 +283,11 @@ class DynamicIntervalManagementV3(DynamicIntervalManagementBase):
             if child_r is not None:
                 _rotate_subtree(child_r)
 
+    @validators.validate_args([None, check_intervals])
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        """Entry point for solution runner."""
+        """Entry point for `merge` api.
+        Takes runtime O(N Log N) and memory O(N) for N items."""
+
         Node = self.__class__.IntervalMergeTreeAVLBSTNode  # type alias
         sentinel_lo, sentinel_hi = Node.SENTINEL_INTERVAL
         sent = Node(node_interval_lo=sentinel_lo,
@@ -288,7 +300,11 @@ class DynamicIntervalManagementV3(DynamicIntervalManagementBase):
 
 class DynamicIntervalManagementV2(DynamicIntervalManagementBase):
 
+    @validators.validate_args([None, check_intervals])
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        """Entry point for `merge` api.
+        Takes runtime O(N Log N) and memory O(N) for N items."""
+
         n = len(intervals)
 
         sorted_lo_edges = [None] * n
@@ -325,7 +341,11 @@ class DynamicIntervalManagementV2(DynamicIntervalManagementBase):
 
 class DynamicIntervalManagementV1(DynamicIntervalManagementBase):
 
+    @validators.validate_args([None, check_intervals])
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        """Entry point for `merge` api.
+        Takes runtime O(N Log N) and memory O(N) for N items."""
+
         n = len(intervals)
 
         sorted_edge_weights = [None] * (2*n)

@@ -17,6 +17,20 @@ def log_summary(line, sink=print):
         with open(summary_file, 'a') as f:
             f.write(line)
 
+from contextlib import nullcontext
+
+@pytest.mark.func
+@pytest.mark.parametrize(
+    "point, expectation",
+    [
+        (1, nullcontext()),
+        ("1", pytest.raises(TypeError)),
+    ]
+)
+def test_check_point(point, expectation):
+    with expectation as exp:
+        assert dpa.check_point(point) == exp
+
 @pytest.mark.func
 def test_benchmark_static():
     """Simple test runner to verify all variants."""
