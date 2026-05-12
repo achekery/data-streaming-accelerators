@@ -1,0 +1,35 @@
+site_name: Data Streaming Accelerators
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.sections
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true # For your O(log N) LaTeX notations
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+nav:
+  - Overview: index.md
+  - Modules:
+    - Dynamic Interval Management: dynamic_interval_management.md
+    - Dynamic Point Aggregation: dynamic_point_aggregation.md
+    - Suffix Pattern Recognition: suffix_pattern_recognition.md
+  - Development: development.md
