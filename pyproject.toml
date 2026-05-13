@@ -19,9 +19,9 @@ dev = [
 docs = [
     "mkdocs-macros-plugin>=1.5.0",
     "mkdocs-material>=9.7.6",
-    "mkdocs-mermaid2-plugin>=1.2.3",
     "mkdocstrings-python>=2.0.3",
     "mkdocstrings[python]>=1.0.4",
+    "pymdown-extensions>=10.21.2",
 ]
 lint = [
     "ruff>=0.15.12",

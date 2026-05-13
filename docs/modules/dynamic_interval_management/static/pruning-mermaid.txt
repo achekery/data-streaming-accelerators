@@ -1,5 +1,5 @@
 graph TD
-    Start([Search for Overlap with Query  [7, 9]]) --> Root
+    Start(["Search for Overlap with Query  [7, 9]"]) --> Root
     
     Root{"Node:  [5, 8]<br/>Subtree Max: 20"} -- "Overlap Check" --> Match
     Root -- "Check Left Subtree" --> LeftCheck{"Left Subtree Max >= 7?"}
