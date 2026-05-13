@@ -2,7 +2,11 @@
 ![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
 
 ## 1. Design Summary
+<!-- --8<-- [start:summary] -->
 The theoretical lower bound for merging $N$ static intervals is $\Omega(N \log N)$ due to the sorting requirement. By focusing on interval edges rather than the source intervals themselves, we can focus on efficient algorithms with compact implementation.  However, in **Online Streaming Environments**, the task shifts from batch data loading (static intervals) to streaming data ingestion (dynamic intervals).
+<!-- --8<-- [end:summary] -->
+
+![Graph for Performance Report](static/performance-report-1280x640.png)
 
 ### 📊 Complexity Analysis
 
@@ -54,8 +58,6 @@ In benchmarks with dynamic intervals up to $N=3000$, the Interval Tree (Variant 
 | 1000 | 0.1501 | 0.0230 | 6.5x |
 | 2000 | 0.6743 | 0.0383 | 17.6x |
 | 3000 | 1.6093 | 0.0318 | **50.6x** |
-
-![Graph for Performance Report](static/performance-report-1280x640.png)
 
 ## 4. Design Optimizations
 

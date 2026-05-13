@@ -2,9 +2,11 @@
 ![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
 
 ## 1. Design Summary
+<!-- --8<-- [start:summary] -->
 For suffix pattern recognition with $K$ suffix patterns (length $W$) and 1 query pattern (length $N$), using **reverse-traversal prefix tree search** is efficient because it can model common ancestor ordering with reverse encoding (by inserting suffix patterns in reverse order during setup and searching in reverse order during queries) and check the multiple patterns over a single root-to-leaf pass (taking runtime $O(K \cdot W)$ for one-time setup and $O(W)$ for each query). This improves over using direct suffix pattern search which must check the multiple patterns over separate array passes (taking $O(K \cdot W)$ for each query) or using forward-traversal prefix tree search which cannot model common ancestor ordering and must check the multiple patterns over separate root-to-leaf passes (taking runtime $O(K \cdot W)$ for one-time setup and $O(K \cdot W)$ for each query).
 
 For batch data (offline scenario), reading the query pattern from a static array (size $N$) with a reverse iterator takes $O(1)$ auxiliary space. For streaming data (online scenario), reading the query pattern from a history array (size $W$) reconstructed from the stream takes $O(W)$ auxiliary space.
+<!-- --8<-- [end:summary] -->
 
 ### 📊 Complexity Analysis
 

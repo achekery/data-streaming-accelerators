@@ -1,7 +1,5 @@
 # DEVELOPMENT
 
-TODO: Verify gh-deploy workflow is successful
-
 ## Run tests with pytest
 
 ```sh
