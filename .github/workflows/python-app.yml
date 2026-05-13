@@ -28,7 +28,7 @@ jobs:
       run: |
         uv run --group dev --extra benchmark pytest -sv
 
-    - name: Upload artifacts from package tests
+    - name: Upload artifacts from tests
       uses: actions/upload-artifact@v4
       with:
         name: artifacts
