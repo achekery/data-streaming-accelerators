@@ -2,11 +2,13 @@
 ![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
 
 ## 1. Design Summary
+<!-- --8<-- [start:summary] -->
 The optimal runtime complexity for dynamic point aggregation from $N$ point values to $O(N)$ disjoint intervals is $\Omega(N \log N)$ due to the ordering requirement. The request handler uses `put` requests to add new values and `get` requests to make a new interval sequence.
 
 Because offline scenarios (batch data) have known usage patterns, the batch variant (V1) can **optimize the hot path** by simplifying high-usage `put` requests to $O(1)$ and expanding low-usage `get` requests to $O(N \log N)$.
 
 However, because online scenarios (streaming data) do not have known usage patterns, the streaming variant (V2) must instead **balance complexity** between `put` requests ($O(\log N)$) and `get` requests ($O(N)$).
+<!-- --8<-- [end:summary] -->
 
 ### 📊 Complexity Analysis
 
@@ -83,3 +85,7 @@ These results highlight that the batch variant (V1) is suitable for smaller data
 
 ### State Transitions
 To ensure new point values are correctly merged with existing disjoint intervals, I applied **Correctness by Design** by separately handling the 3 overlap cases: the enclosed-by case (early exit if lower and upper bounds at insertion point are already aligned), the adjacent-to case (join with 1 or 2 neighbors if lower and upper bounds at insertion point are adjacent), and the distinct-from case (insert as new lower and upper bounds).
+
+## 5. API Reference
+
+::: data_streaming_accelerators.core.dynamic_point_aggregation

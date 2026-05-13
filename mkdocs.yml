@@ -1,0 +1,48 @@
+site_name: Data Streaming Accelerators
+site_url: https://achekery.github.io/data-streaming-accelerators/
+
+repo_name: Data Streaming Accelerators
+repo_url: https://github.com/achekery/data-streaming-accelerators/
+
+theme:
+  language: en
+  name: material
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.sections
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true # For your O(log N) LaTeX notations
+  - pymdownx.snippets:
+      base_path: docs
+
+plugins:
+  - search
+  - macros:
+      on_error_fail: true
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+nav:
+  - Overview: index.md
+  - Modules:
+    - Dynamic Interval Management: modules/dynamic_interval_management/README.md
+    - Dynamic Point Aggregation: modules/dynamic_point_aggregation/README.md
+    - Suffix Pattern Recognition: modules/suffix_pattern_recognition/README.md
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

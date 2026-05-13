@@ -2,7 +2,11 @@
 ![Python CI](https://github.com/achekery/data-streaming/actions/workflows/python-app.yml/badge.svg)
 
 ## 1. Design Summary
+<!-- --8<-- [start:summary] -->
 The theoretical lower bound for merging $N$ static intervals is $\Omega(N \log N)$ due to the sorting requirement. By focusing on interval edges rather than the source intervals themselves, we can focus on efficient algorithms with compact implementation.  However, in **Online Streaming Environments**, the task shifts from batch data loading (static intervals) to streaming data ingestion (dynamic intervals).
+<!-- --8<-- [end:summary] -->
+
+![Graph for Performance Report](static/performance-report-1280x640.png)
 
 ### 📊 Complexity Analysis
 
@@ -17,11 +21,13 @@ The theoretical lower bound for merging $N$ static intervals is $\Omega(N \log N
 
 The advantage of an Augmented AVL Interval Tree is its ability to prune search branches that cannot contain an overlap, ensuring $O(\log N)$ search time.
 
-![Diagram of Pruning Logic](static/pruning-diagram.png)
+```mermaid
+{% include "modules/dynamic_interval_management/static/pruning-mermaid.txt" %}
+```
 
 ## 2. Design Approaches
 
-### Optimal Approaches for Batch Data (Static Intervals)
+## Optimal Approaches for Batch Data (Static Intervals)
 * **Sweep-line (Variant 1):** Uses a sorted list of edge objects and a counter.
     * **Complexity (Batch):** $O(N \log N)$ setup, $O(N)$ calculation. 
     * **Complexity (Streaming):** $O(N \log N)$ per `insert`/`put` operation.
@@ -31,7 +37,7 @@ The advantage of an Augmented AVL Interval Tree is its ability to prune search b
     * **Complexity (Streaming):** $O(N \log N)$ per `insert`/`put` operation.
     * **Verdict:** Suitable for batch case due to best-in-class ~7ms benchmark with static intervals. Not suitable for streaming case due to high complexity.
 
-### Optimal Approaches for Streaming Data (Dynamic Intervals)
+## Optimal Approaches for Streaming Data (Dynamic Intervals)
 * **Augmented AVL Interval Tree (Variant 3):** A stateful, self-balancing BST.
     * **Complexity (Batch):** $O(N \log N)$ setup, $O(N)$ calculation. 
     * **Complexity (Streaming):** $O(\log N)$ per `insert`/`put` operation.
@@ -53,8 +59,6 @@ In benchmarks with dynamic intervals up to $N=3000$, the Interval Tree (Variant 
 | 2000 | 0.6743 | 0.0383 | 17.6x |
 | 3000 | 1.6093 | 0.0318 | **50.6x** |
 
-![Graph for Performance Report](static/performance-report-1280x640.png)
-
 ## 4. Design Optimizations
 
 ### Augmented Metadata
@@ -68,3 +72,7 @@ By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balanci
 
 ### Python Object-Model Tuning
 To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals.
+
+## 5. API Reference
+
+::: data_streaming_accelerators.core.dynamic_interval_management
