@@ -1,43 +1,17 @@
+# DEVELOPMENT
 
-data_streaming_accelerators/
-├── .github/workflows/
-├── docs/
-│   └── mkdocs.yml
-├── src/
-│   └── data_streaming_accelerators/
-│       ├── __init__.py
-│       ├── __main__.py
-│       ├── core/
-│       |   ├── dynamic_interval_management.py
-│       |   ├── dynamic_point_aggregation.py
-│       |   └── suffix_pattern_recognition.py
-│       ├── api.py
-├── tests/
-│   ├── conftest.py
-│   ├── test_api.py
-│   ├── test_core.py
-├── .gitignore
-├── pyproject.toml
-├── README.md
-└── LICENSE
+TODO: Verify gh-deploy workflow is successful
 
-```sh
-# https://docs.astral.sh/uv/getting-started/installation/
-# install uv from official installer
-wget -qO- https://astral.sh/uv/install.sh | sh
-```
+TODO: Verify mkdocs generation is successful
 
 ```
-# Run specific markers in pytest
-uv run --group dev --extra benchmark pytest -sv -m func
-uv run --group dev --extra benchmark pytest -sv -m perf
+uv run mkdocs serve -v
+```
 
-# Run pytest
-uv run --group dev --extra benchmark pytest -sv
+TODO: Remove unnecessary files
 
-# Watch run until it completes.
-gh run watch
-
-# Show project files.
-(git ls-files | xargs tail -n +1) 2>&1 >var/files.txt
+```
+rm -rf docs/dynamic_interval_management/
+rm -rf docs/dynamic_point_aggregation/
+rm -rf docs/suffix_pattern_recognition/
 ```
