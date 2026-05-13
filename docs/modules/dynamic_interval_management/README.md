@@ -73,15 +73,6 @@ By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balanci
 ### Python Object-Model Tuning
 To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals.
 
-## 5. Getting Started
-
-This design requires **Python 3.13+**.
-
-To run the regression tests for this design:
-```bash
-uv run --group dev --extra benchmark pytest -sv
-```
-
-## 6. API Reference
+## 5. API Reference
 
 ::: data_streaming_accelerators.core.dynamic_interval_management
