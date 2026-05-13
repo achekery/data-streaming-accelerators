@@ -2,8 +2,6 @@
 
 TODO: Verify gh-deploy workflow is successful
 
-TODO: Verify mkdocs generation is successful
-
 ## Run tests with pytest
 
 ```sh
