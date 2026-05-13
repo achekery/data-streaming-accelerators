@@ -17,7 +17,9 @@ The theoretical lower bound for merging $N$ static intervals is $\Omega(N \log N
 
 The advantage of an Augmented AVL Interval Tree is its ability to prune search branches that cannot contain an overlap, ensuring $O(\log N)$ search time.
 
-![Diagram of Pruning Logic](static/pruning-diagram.png)
+```mermaid
+{% include "modules/dynamic_interval_management/static/pruning-mermaid.txt" %}
+```
 
 ## 2. Design Approaches
 

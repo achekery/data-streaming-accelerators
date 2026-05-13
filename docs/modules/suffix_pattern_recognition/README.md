@@ -19,7 +19,9 @@ For batch data (offline scenario), reading the query pattern from a static array
 
 The advantage of reverse-traversal prefix tree search is that it can check multiple suffix patterns at once, ensuring $O(W)$ query time (and is independent of the suffix pattern count $K$ and the query pattern length $N$). This is possible because of reverse encoding.
 
-![Diagram for reverse encoding](static/diagram-image.png)
+```mermaid
+{% include "modules/suffix_pattern_recognition/static/diagram-mermaid.txt" %}
+```
 
 ## 2. Design Approaches & Trade-offs
 
