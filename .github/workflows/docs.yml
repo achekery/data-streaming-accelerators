@@ -8,16 +8,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+    - uses: actions/checkout@v6
 
-      - name: Setup python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: "pyproject.toml"
+    - name: Setup python
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: "pyproject.toml"
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+    - name: Setup uv
+      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 
-      - name: Build docs with mkdocs
-        run: |
-          uv run --group docs mkdocs gh-deploy -v --clean --strict --force
+    - name: Build docs with mkdocs
+      run: |
+        uv run --group docs mkdocs gh-deploy -v --clean --strict --force
