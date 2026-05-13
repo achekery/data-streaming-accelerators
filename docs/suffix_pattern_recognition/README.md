@@ -28,3 +28,7 @@ Although Direct Search (v1) requires ~90% less lines of code, it performs worse 
 
 ### Python Object-Model Tuning
 To reduce object-overhead due to the Python object-model, I implemented a **nested hash map** for the reverse-traversal prefix tree, with each "node" using a character for the hash map key and a reference to the next "node" for the hash map value. This approach reduced object lookup during queries.
+
+## 3. API Reference
+
+::: data_streaming_accelerators.core.suffix_pattern_recognition

@@ -21,7 +21,7 @@ The advantage of an Augmented AVL Interval Tree is its ability to prune search b
 
 ## 2. Design Approaches
 
-### Optimal Approaches for Batch Data (Static Intervals)
+## Optimal Approaches for Batch Data (Static Intervals)
 * **Sweep-line (Variant 1):** Uses a sorted list of edge objects and a counter.
     * **Complexity (Batch):** $O(N \log N)$ setup, $O(N)$ calculation. 
     * **Complexity (Streaming):** $O(N \log N)$ per `insert`/`put` operation.
@@ -31,7 +31,7 @@ The advantage of an Augmented AVL Interval Tree is its ability to prune search b
     * **Complexity (Streaming):** $O(N \log N)$ per `insert`/`put` operation.
     * **Verdict:** Suitable for batch case due to best-in-class ~7ms benchmark with static intervals. Not suitable for streaming case due to high complexity.
 
-### Optimal Approaches for Streaming Data (Dynamic Intervals)
+## Optimal Approaches for Streaming Data (Dynamic Intervals)
 * **Augmented AVL Interval Tree (Variant 3):** A stateful, self-balancing BST.
     * **Complexity (Batch):** $O(N \log N)$ setup, $O(N)$ calculation. 
     * **Complexity (Streaming):** $O(\log N)$ per `insert`/`put` operation.
@@ -67,4 +67,19 @@ To ensure system reliability during high-frequency updates, I prioritized **Corr
 By implementing a **Sentinel Node Architecture** with a **Two-Down** AVL balancing subtree rotation strategy and removing the need for sentinel node checks throughout the codebase, I simplified the balancing feature and provided a cleaner and more maintainable implementation.
 
 ### Python Object-Model Tuning
-To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals.
+To reduce object-overhead due to the Python object-model, I implemented **Attribute Flattening**. After replacing packed collections (`self.interval[0]`) with discrete integers (`self.lo`, `self.hi`), I reduced constant factors in the hot execution path and achieved a **15% reduction** in benchmarks with static intervals. 123
+
+test
+
+## 5. Getting Started
+
+This design requires **Python 3.13+**.
+
+To run the regression tests for this design:
+```bash
+uv run --group dev --extra benchmark pytest -sv
+```
+
+## 6. API Reference
+
+::: data_streaming_accelerators.core.dynamic_interval_management

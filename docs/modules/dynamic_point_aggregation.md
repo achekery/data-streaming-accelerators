@@ -32,11 +32,11 @@ With python `sortedcontainers`, these runtime complexities were instead $O(N \sq
 ### Streaming Benchmark Results
 When the request traffic was mostly `put` requests (R=0.1) to simulate offline scenarios, the batch variant (V1) was 2.7x faster when data size was smaller (N=100) and the streaming variant was **4.9x faster** when data size was larger (N=50000).
 
-![Speedup by Data Size (R=0.1)](dynamic_point_aggregation/static/speedup_by_data_size_request_distr0.1.png)
+![Speedup by Data Size (R=0.1)](static/speedup_by_data_size_request_distr0.1.png)
 
 When the request traffic was balanced beween `put` and `get` requests (R=0.5) to simulate online scenarios, the batch variant (V1) was **1.2x faster** when data size was smaller (N=100) and the streaming variant was **6.4x faster** when data size was larger (N=50000).
 
-![Speedup by Data Size (R=0.5)](dynamic_point_aggregation/static/speedup_by_data_size_request_distr0.5.png)
+![Speedup by Data Size (R=0.5)](static/speedup_by_data_size_request_distr0.5.png)
 
 These results highlight that the batch variant (V1) is suitable for smaller data streams and offline scenarios, whereas the streaming variant (V2) is suitable for larger data streams and online scenarios.
 
@@ -86,4 +86,4 @@ To ensure new point values are correctly merged with existing disjoint intervals
 
 ## 5. API Reference
 
-::: data_streaming_accelerators.core.dynamic_point_aggregation.DynamicPointAggregationV2
+::: data_streaming_accelerators.core.dynamic_point_aggregation
