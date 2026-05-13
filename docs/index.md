@@ -10,20 +10,20 @@
 
 ![Graph for Performance Report](modules/dynamic_interval_management/static/performance-report-1280x640.png)
 
-### Dynamic Point Aggregation
+### [Dynamic Point Aggregation](modules/dynamic_point_aggregation)
 
 --8<-- "modules/dynamic_point_aggregation/README.md:summary"
 
-### Suffix Pattern Recognition
+### [Suffix Pattern Recognition](modules/suffix_pattern_recognition)
 
 --8<-- "modules/suffix_pattern_recognition/README.md:summary"
 
 
 ## 2. Getting Started
 
-This design requires **Python 3.13+**.
+This suite requires **Python 3.13+**.
 
-To run the regression tests for this design:
+To run the regression tests:
 
 ```bash
 uv run --group dev --extra benchmark pytest -sv
