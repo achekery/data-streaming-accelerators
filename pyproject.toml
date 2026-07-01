@@ -21,7 +21,7 @@ docs = [
     "mkdocs-material>=9.7.6",
     "mkdocstrings-python>=2.0.3",
     "mkdocstrings[python]>=1.0.4",
-    "pymdown-extensions>=10.21.2",
+    "pymdown-extensions>=10.21.3",
 ]
 lint = [
     "ruff>=0.15.12",
