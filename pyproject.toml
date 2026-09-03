@@ -18,7 +18,7 @@ dev = [
 ]
 docs = [
     "mkdocs-macros-plugin>=1.5.0",
-    "mkdocs-material>=9.7.6",
+    "mkdocs-material>=9.7.7",
     "mkdocstrings-python>=2.0.3",
     "mkdocstrings[python]>=1.0.4",
     "pymdown-extensions>=10.21.3",
